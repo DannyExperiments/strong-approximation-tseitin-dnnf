@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "Cite this version of the research release."
+type: software
+title: "Strong approximation of Tseitin codes without determinism"
+authors:
+  - name: "DannyExperiments"
+version: "1.0.0"
+date-released: 2026-11-27
+doi: "10.5281/zenodo.24571970"
+url: "https://doi.org/10.5281/zenodo.24571970"
+repository-code: "https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf"
+keywords:
+  - "Tseitin formulas"
+  - "knowledge compilation"
+  - "decomposable negation normal form"
+  - "strong approximation"
+  - "nondeterministic DNNF"
+  - "affine binary codes"
+  - "code branchwidth"
+  - "rectangle covers"
+preferred-citation:
+  type: software
+  title: "Strong approximation of Tseitin codes without determinism"
+  authors:
+    - name: "DannyExperiments"
+  version: "1.0.0"
+  date-released: 2026-11-27
+  doi: "10.5281/zenodo.24571970"
+  url: "https://doi.org/10.5281/zenodo.24571970"
+  repository-code: "https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf"

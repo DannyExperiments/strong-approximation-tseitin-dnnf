@@ -1,0 +1,32 @@
+{
+  "title": "Strong approximation of Tseitin codes without determinism",
+  "upload_type": "software",
+  "publication_date": "2026-11-27",
+  "version": "1.0.0",
+  "creators": [
+    {
+      "name": "DannyExperiments"
+    }
+  ],
+  "keywords": [
+    "Tseitin formulas",
+    "knowledge compilation",
+    "decomposable negation normal form",
+    "strong approximation",
+    "nondeterministic DNNF",
+    "affine binary codes",
+    "code branchwidth",
+    "rectangle covers"
+  ],
+  "description": "<p>This note answers the uniform strong-error case of Open Question 1 in Alexis de Colnet's 2022 thesis Hard Functions in Knowledge Compilation: from Lower Bounds to Applications. For one unbounded family of finite simple cubic 3-connected graphs with m edges, every decomposable negation normal form that strongly approximates the even-edge-subgraph predicate at any fixed relative symmetric-difference error below one requires size exponential in m. The approximation uses the original edge variables. OR branches may have overlapping accepting assignments.</p><p>The proof takes a hard cut from the variable tree of each chosen accepting trace. On that cut, true pairs have equal vertex syndromes and each matching-syndrome block is an exact rectangle. A Cauchy–Schwarz inequality bounds the true coverage of any mixed rectangle by its block cap and its own size. The false side of a single rectangle is bounded by the entire approximation's false-positive count. The cover argument consequently adds true coverage without summing reused errors. The graph family, hard cuts and adversarial cover mechanism build on de Colnet's earlier work, and the mixed-rectangle step addresses the overlap obstacle stated in the thesis.</p><p>For nonempty affine binary codes the companion gives lower bounds for ordinary and structured DNNFs in terms of code branchwidth. The structured bound uses the fixed-vtree-cut rectangle theorem and a sampled independent set of code points. The exact deterministic structured construction uses feasible syndrome states, following the tree-realization framework of Kashyap. The bounds give a logarithmic branchwidth criterion for polynomial-size strong approximations at fixed error below one. Sharp general exponents and optimal-vtree construction remain outside the result.</p><p>The deposit provides the manuscript, TeX source, bibliography, citation file, evidence archive, and repository checksums. The exact replay covers small affine rank, circuit construction, K4 parity rectangles, all acceptance masks on four singleton syndrome blocks, and the authentic fixture in the rotating illustration and offline explorer. Internal mathematical review is complete. External peer review and formal verification are pending.</p><p>ChatGPT Astra 6.2 (OpenAI) generated the recovered proof, affine-code supplement and original replay under human direction. OpenAI Codex independently reviewed the mathematics. GPT-6.2 Sol (OpenAI) checked primary sources and prepared the manuscript, extended replay and worked illustration. DannyExperiments is the project citation identity.</p>",
+  "access_right": "open",
+  "license": "other-closed",
+  "notes": "All rights reserved. Publicly downloadable files are supplied without a repository-wide reuse license.",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/releases/tag/v1.0.0",
+      "relation": "isSupplementTo",
+      "resource_type": "software"
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+\documentclass[11pt,a4paper]{amsart}
+\usepackage[hmargin=.83in,vmargin=.70in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{amssymb}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Strong approximation of Tseitin codes without determinism}}
+\urlstyle{same}
+\setlength{\emergencystretch}{2em}
+\linespread{0.96}
+\DeclareMathSizes{8}{8}{8}{8}
+\DeclareMathSizes{9}{9}{8}{8}
+\DeclareMathSizes{10.95}{10.95}{8}{8}
+\renewcommand{\bibliofont}{\normalsize\raggedright}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newcommand{\F}{\mathbb F_2}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\E}{\mathbb E}
+\title[Strong approximation of Tseitin codes]{Strong approximation of Tseitin codes without determinism}
+\date{}
+\begin{document}
+\begin{abstract}
+For a family of simple cubic $3$-connected graphs with $m$ edges, every DNNF strongly approximating the even-edge-subgraph predicate to any fixed error $\varepsilon<1$ has size $2^{\Omega(m)}$. This answers Open Question~1 in de Colnet's 2022 thesis for uniform strong error on the original variables. The proof controls each mixed rectangle separately by sorting its true points into syndrome classes. Overlapping rectangles can share false positives, so the proof only sums true coverage. For nonempty affine binary codes we also give ordinary and structured approximation bounds in terms of code branchwidth and an exact structured circuit construction.
+\end{abstract}
+\maketitle
+
+\section{Statement and setup}
+A decomposable negation normal form (DNNF) is an AND/OR circuit with literals and constants at its leaves in which the inputs to an AND have disjoint variable supports. Determinism would also require the accepting assignments of every two OR inputs to be disjoint. We permit overlapping OR inputs. For a variable partition $(A,B)$ a rectangle is a product $X\times Y$ of sets of assignments on the respective sides. A vtree is a rooted full binary tree with the variables as distinct leaves. Its cuts are the partitions induced by deleting an edge.
+
+For a finite simple graph $G=(V,E)$ let $C_G$ be the set of edge assignments with even parity at each vertex. It is the satisfying set of $T(G,0)$. Uniform strong error of $g$ with accepting set $F$ means $|F\triangle C_G|\leq \varepsilon|C_G|$, with both sets on $E$. De Colnet and Mengel give exponential bounds for deterministic approximations \cite{approx}. De Colnet asks if the same phenomenon holds without determinism \cite[\S2.5, Open Question~1]{thesis}.
+
+\begin{theorem}\label{theorem:tseitin}
+There is a family of finite simple cubic $3$-connected graphs with unbounded edge counts $m$ such that, for every fixed $0\leq\varepsilon<1$, every DNNF strongly approximating $C_G$ to error $\varepsilon$ has size $2^{\Omega(m)}$. The same family works for all such $\varepsilon$.
+\end{theorem}
+
+\section{Hard cuts and mixed rectangles}
+Use the cubic $3$-connected family of linear treewidth in the proof of \cite[Lemma~33]{thesis}. Every vtree on $E$ has a cut $(A,B)$ for which any rectangle contained in $C_G$ has size at most
+\begin{equation}\label{eq:hard}
+                  L=|C_G|2^{-k},\qquad k=\Omega(m).
+\end{equation}
+Here and below the constants can be uniform over the vtrees on the family. This is the intermediate hard-cut statement in the proof of \cite[Theorem~5]{thesis}, also used in the proof of Theorem~12 there. To see it, take a cut with at least the graph branchwidth in vertices incident to both sides. Branchwidth is linear in treewidth on the family. In maximum degree three the crossing vertices contain an independent set of at least a quarter of their number by greedy deletion. The splitting lemma \cite[Lemma~22]{thesis} selects at least a third of this independent set whose splitting along the partition leaves a connected graph. Write $k$ for the number selected. In a nonempty rectangle contained in the code, all left assignments have the same partial parity at each selected vertex, since each is compatible with every right assignment. The two split copies of such a vertex must thus have prescribed parity. The connected split graph has the same edges and $k$ more vertices. Its incidence equations over $\F$ have rank $|V|+k-1$, while the original rank is $|V|-1$. A satisfiable split system therefore has $|C_G|2^{-k}$ edge assignments, proving \eqref{eq:hard}. Itsykson, Riazanov and Smirnov subsequently proved a hard-cut bound without the degree cap for $3$-connected graphs \cite[\S4.2]{tight}.
+
+For a cut, let $\sigma_A(a)$ and $\sigma_B(b)$ be the partial vertex parity vectors. A pair $(a,b)$ is in $C_G$ exactly when these vectors agree. In a rectangle $R=X\times Y\subseteq F$ write $a_i,b_i$ for the numbers of assignments in $X,Y$ with syndrome $i$. Set $t=|R\cap C_G|=\sum_i a_i b_i$. Each matching-syndrome block is itself a rectangle contained in $C_G$, so on a hard cut $a_i b_i\leq L$. Therefore
+\begin{equation}\label{eq:mixed}
+\frac{t}{\sqrt L}\;\leq\;\sum_i\sqrt{a_i b_i}\;\leq\;
+   \sqrt{\left(\sum_i a_i\right)\left(\sum_i b_i\right)}=\sqrt{|R|}.
+\end{equation}
+The first inequality holds term by term and the second is Cauchy--Schwarz. Each rectangle alone satisfies $|R\setminus C_G|\leq|F\setminus C_G|$. Thus $t^2\leq L(t+|F\setminus C_G|)\leq(1+\varepsilon)L|C_G|$. The true points in each hard-cut rectangle number at most $\sqrt{1+\varepsilon}\,2^{-k/2}|C_G|$.
+
+
+\begin{figure}[t]
+\centering
+\begin{tabular}{c|cccc}
+$A\backslash B$ & $00$ & $01$ & $10$ & $11$\\ \hline
+$00$ & $\mathrm{T}_2$ & $\mathrm{F}_{1,2}$ & $\cdot$ & $\cdot$\\
+$01$ & $\cdot$ & $\mathrm{T}_1$ & $\cdot$ & $\cdot$\\
+$10$ & $\cdot$ & $\cdot$ & $\mathrm{T}$ & $\cdot$\\
+$11$ & $\cdot$ & $\cdot$ & $\cdot$ & $\mathrm{T}$
+\end{tabular}
+\caption{In a four-syndrome equality code the column rectangle $R_1=\{00,01\}\times\{01\}$ and row rectangle $R_2=\{00\}\times\{00,01\}$ share the false pair $(00,01)$. Each contains one true pair. A single square $\{00,01\}^2$ contains two true and two false pairs, attaining equality in $t^2\leq L|R|$ at $L=1$.}
+\end{figure}
+
+\section{Covering the true positives}
+We use the adversarial cover argument of \cite[Theorem~7]{thesis}, recording the normalization and the possible overlaps. Binarize ANDs, pad the root's missing variables with their tautologies, and for each OR pad each input with tautologies for the variables it lacks relative to the OR's support. The added ANDs combine disjoint supports. A gate's old support is unchanged by smoothing below it. Processing the circuit bottom up thus produces a smooth binary-AND DNNF computing the same function, with overhead polynomial in the variable count and original size.
+
+For any accepted full assignment there is a true trace: pick one true child of each visited OR and both children at a visited AND, unfolding shared subcircuits along each occurrence. Every variable has exactly one leaf in the trace, by smoothness, root padding and decomposability. Remove constant-only subtrees and contract unary nodes. The resulting trace gives a vtree. The below-cut side of any vtree edge is the support of a gate on the trace.
+
+For a gate $v$ of positive support, let $R_v$ consist of full assignments accepting some trace through $v$. It is a rectangle across the syntactic support of $v$ and its complement. In fact, on the support take any satisfying assignment of $v$. On the complement take any assignment supporting some accepting trace context through $v$. Each sibling met at an AND ancestor is disjoint from $v$ by decomposability. OR ancestors specify a choice. A gate of positive support has only one occurrence in a trace, since two occurrences would require a decomposable AND with both supports containing its variables. Consequently the subtrace through $v$ can be exchanged with any accepting subtrace at $v$. Taking the union of all compatible contexts changes just the second factor. In particular $R_v\subseteq F$.
+
+Start with an uncovered point of $F\cap C_G$, choose its accepting trace, use the hard-cut gate of the resulting vtree, and add its rectangle. Each gate can be chosen at most once because its rectangle covers all assignments with a trace through that gate. Therefore a normalized DNNF with $s$ gates covers all true positives with at most $s$ hard-cut rectangles. Since there are at least $(1-\varepsilon)|C_G|$ true positives, Section~2 gives
+\[
+                  s\ \geq\ \frac{1-\varepsilon}{\sqrt{1+\varepsilon}}\,2^{k/2}.
+\]
+Only true coverage is added. A polynomial overhead for normalization leaves $2^{\Omega(m)}$ as a lower bound for the original circuit. This proves Theorem~\ref{theorem:tseitin}. For $\varepsilon=1$ the false constant is permitted, which explains the strict upper limit on the error.
+
+\section{Affine binary codes and width}
+Let $C=\{x\in\F^n:Hx=b\}$ be a nonempty affine code on $n\geq1$ variables. On a partition $(A,B)$ write
+\[
+    \lambda(A)=\rank(H_A)+\rank(H_B)-\rank(H),\qquad K=2^{\lambda(A)}.
+\]
+Let $w$ be the minimum, over vtrees on the variables, of the maximum $\lambda$ of their cuts. This is column-matroid branchwidth with the additive one omitted. It agrees with the state-dimension measure of a linear code, expressed using a parity-check matrix \cite[\S6, Eqs.~(23)--(24)]{kashyap}. Its affine analogue is unchanged by translation. For $n=1$ use $w=0$.
+
+For an accepting set $F$, put $\alpha=|F\setminus C|/|C|$ and $\beta=|C\setminus F|/|C|$. The normalized ordinary DNNF bound below uses $K_0=2^w$. The structured bound uses $K=2^{\lambda(A)}$ at any cut of its given vtree. We call a binary-AND DNNF structured when all ANDs respect the sides of some split in the same vtree, in the sense of \cite{structured,rectangles}.
+
+\newpage
+\begin{theorem}\label{theorem:affine}
+The normalized ordinary DNNF needs at least
+\[
+                 \frac{2(1-\beta)K_0}{1+\sqrt{1+4\alpha K_0}}
+\]
+gates. For $\beta<1$, a structured DNNF has size at least $(1-\beta)^2K/(1-\beta+2\alpha)$ at any cut of its vtree. For $\beta=1$ take the trivial bound zero. Given a width-$w$ vtree the code has an exact deterministic structured DNNF of size $O(n2^{2w})$.
+\end{theorem}
+
+For $n=1$, the structured lower bound at width zero is interpreted with $K=1$. Both lower bounds are at most one, and every circuit, including a constant, has at least one gate. A nonempty one-bit code is a literal or a tautology, giving the claimed constant-size upper bound. For $n\geq2$ we prove the bounds below.
+
+\subsection{Syndrome blocks and the ordinary bound}
+The possible left syndromes in codewords form $\mathrm{im}(H_A)\cap(b+\mathrm{im}(H_B))$. This nonempty affine space is a translate of an intersection of dimension $\lambda(A)$, so there are $K$ such values. For each left syndrome $s$, the matching right syndrome is $b+s$. Write $X_i$ and $Y_i$ for the matching side fibers. By rank-nullity all left fibers have the same size and all right fibers have the same size. The code is the disjoint union of diagonal blocks $X_i\times Y_i$, each of size $L=|C|/K$. Cross-tiles $X_i\times Y_j$ for $i\neq j$ consist of false pairs and have the same size as a diagonal block.
+
+For $R\subseteq F$ the argument of \eqref{eq:mixed} applies to matching blocks. Assignments in unmatched fibers only increase $|R|$. Hence for $u=|R\cap C|/|C|$ one has $Ku^2-u-\alpha\leq0$ and
+\[
+                     u\leq\frac{1+\sqrt{1+4\alpha K}}{2K}.
+\]
+This bound decreases with $K$, as is also seen from the quadratic inequality at any positive $u$. Each trace vtree has a cut with $K\geq K_0$. Applying the gate cover to the $(1-\beta)|C|$ true positives proves the ordinary bound. It is at least $(1-\beta)K_0/(1+\sqrt{\alpha K_0})$ and at $\alpha=0$ gives $(1-\beta)K_0$. For fixed $\alpha+\beta\leq\varepsilon<1$ it is $\Omega_{\varepsilon}(2^{w/2})$ after normalization.
+
+\subsection{Structured bound from a fixed cut}
+Independently select a uniformly random pair $(x_i,y_i)$ from each matching block. Retain each of the selected pairs that belongs to $F$. Connect two retained indices $i,j$ if either cross-pair $(x_i,y_j)$ or $(x_j,y_i)$ is in $F$. For the resulting vertex and edge counts $Y,D$, one has $\E Y=(1-\beta)K$. Every cross-pair is uniform in its cross-tile, so summing over directed cross-tiles gives $\E D\leq |F\setminus C|/L=\alpha K$. Discarded vertices, duplicated edge counts, and unmatched fibers can only improve the bound.
+
+In any finite graph a random ordering produces an independent set of vertices appearing before all their neighbors. Its expected size is $\sum_v1/(1+\deg v)\geq Y^2/(Y+2D)$, by Cauchy--Schwarz. Take the ratio as zero for the empty graph. Averaging and applying Cauchy--Schwarz again gives
+\[
+  \E\frac{Y^2}{Y+2D}\;\geq\;\frac{(\E Y)^2}{\E(Y+2D)}\;\geq\;
+                     \frac{(1-\beta)^2 K}{1-\beta+2\alpha}.
+\]
+Some selection yields an independent set at least this large. A rectangle contained in $F$ cannot cover two selected pairs from the independent set because it would contain their cross-pairs. Thus every rectangle cover on the fixed partition has at least the displayed size. The fixed-vtree-cut theorem of Pipatsrisawat and Darwiche, stated as Theorem~13 in \cite{rectangles}, gives such a cover with at most the structured circuit size. It allows nondeterminism, with disjoint rectangles only needed for its deterministic add-on. At a widest cut this proves $\Omega_{\varepsilon}(2^w)$ under fixed strong error.
+
+\subsection{Exact structured construction}
+On a supplied width-$w$ vtree give a node with leaf set $A$ one gate for each syndrome $H_Ax_A$ occurring in a global codeword. There are at most $2^w$ such states at a nonroot node, and only the target $b$ at the root. The leaf gate is a literal or a tautology. At an internal node the gate for $s$ is the OR of the ANDs for all feasible child-state pairs summing to $s$. A partial assignment with extendible parent syndrome has a global completion, so its own two child syndromes are among the feasible states. Induction shows the gate accepts exactly its specified partial syndrome. The child supports are disjoint and the OR is deterministic because no partial assignment can realize two pairs of child syndromes. There are at most $2^{2w}$ pairs at any node, each feeding one parent state. This proves the size and wire bounds and is the usual syndrome-state construction in the tree-realization framework \cite{kashyap}.
+
+Consequently, on a family of nonempty affine binary codes, polynomial-size ordinary DNNF at any fixed strong error below one is equivalent to $w=O(\log(n+1))$. Normalizing a polynomial-size circuit remains polynomial, and the exact structured construction yields the converse. The argument does not determine sharp exponents at general width or find an optimal vtree.
+
+\section*{AI assistance}
+ChatGPT Astra 6.2 (OpenAI) generated the recovered proof, affine-code supplement and original replay under human direction. OpenAI Codex independently reviewed the mathematics. GPT-6.2 Sol (OpenAI) checked primary sources and prepared this manuscript, the extended replay and illustration. DannyExperiments is the project citation identity.
+
+\bibliographystyle{amsplain}
+\bibliography{references}
+\end{document}

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Syndrome rectangles</title>
+<style>
+:root{color-scheme:dark;--bg:#10182c;--panel:#1d2a42;--white:#f4f7ff;--muted:#c8d5e9;--teal:#65dcb5;--gold:#ffc473;--grid:#394c6d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font:clamp(16px,3.6vw,18px)/1.47 system-ui,sans-serif}
+main{max-width:49rem;margin:auto;padding:clamp(.8rem,4vw,2rem)}
+h1{margin:0 0 .5rem;font-size:clamp(1.95rem,7vw,3.3rem);line-height:1.08}
+h2{margin:.7rem 0 .25rem;font-size:1.2rem}p{margin:0 0 .55rem}
+.intro{color:var(--muted)}
+.controls,.legend,.angle{display:flex;flex-wrap:wrap;align-items:center;gap:.45rem .65rem;margin:.7rem 0}
+button{font:inherit;font-weight:650;color:var(--white);border:1px solid #829abc;border-radius:.6rem;background:var(--panel);padding:.4rem .68rem;cursor:pointer}
+button[aria-pressed=true]{color:#0e2631;background:var(--teal);border-color:var(--teal)}
+canvas{display:block;width:100%;height:auto;background:var(--panel);border-radius:.85rem;touch-action:pan-y;cursor:grab}
+canvas:active{cursor:grabbing}
+.angle{color:var(--muted)}input{flex:1;min-width:7rem;accent-color:var(--teal)}
+.true,.false{display:inline-block;border-radius:.2rem;width:.85rem;height:.85rem;margin-right:.25rem;background:var(--teal)}.false{background:var(--gold)}
+.legend{font-size:.94em}#summary{font-weight:630}#counter{font-variant-numeric:tabular-nums;color:var(--muted)}
+details{margin-top:.8rem;border-top:1px solid #557093;padding-top:.7rem}summary{cursor:pointer;font-weight:650}
+fieldset{border:1px solid #6d87a8;border-radius:.55rem;margin:.55rem 0;padding:.35rem .5rem .55rem}
+fieldset button{margin:.16rem;padding:.27rem .48rem}
+</style>
+<main>
+<h1>Syndrome rectangles</h1>
+<p class="intro">The matrix has four true pairs. A cell belongs to the code when its row syndrome A and column syndrome B match.</p>
+<div id="presets" class="controls" role="group" aria-label="Choose a worked example">
+  <button data-preset="0" type="button" aria-pressed="true">Diagonal</button>
+  <button data-preset="1" type="button" aria-pressed="false">Overlap</button>
+  <button data-preset="2" type="button" aria-pressed="false">Square</button>
+</div>
+<canvas id="matrix" width="700" height="460" role="img" aria-label="Rotating syndrome matrix. Green cells are on the true diagonal. Gold raised cells are false pairs accepted by the chosen rectangle. The exact counts are below."></canvas>
+<div class="legend"><span><i class="true" aria-hidden="true"></i>True pair</span><span><i class="false" aria-hidden="true"></i>Accepted false pair</span></div>
+<label class="angle" for="angle">Rotate matrix <input id="angle" min="14" max="55" value="25" type="range" aria-label="Rotation angle in degrees"></label>
+<h2 id="heading">Matching syndromes</h2>
+<div aria-live="polite"><p id="summary">Four matching pairs on the diagonal.</p><p id="counter">4 true pairs · 0 false pairs</p></div>
+<details>
+  <summary>Build a rectangle</summary>
+  <p>Select rows and columns. Their product includes every crossing, even when the two syndromes differ.</p>
+  <fieldset><legend>Rows A</legend><div id="rows" class="choices"></div></fieldset>
+  <fieldset><legend>Columns B</legend><div id="columns" class="choices"></div></fieldset>
+</details>
+</main>
+<script>
+"use strict";
+const symbols=["00","01","10","11"];
+const c=document.getElementById("matrix"),ctx=c.getContext("2d");
+const angle=document.getElementById("angle");
+const presets=Array.from(document.querySelectorAll("button[data-preset]"));
+const rows=new Set([0,1]), columns=new Set([0,1]);
+const tileButtons=[];
+let mode=0, drag=null;
+const controls=[["rows",rows],["columns",columns]];
+for(const [id,set] of controls){
+  for(const [i,symbol] of symbols.entries()){
+    const button=document.createElement("button");
+    button.textContent=symbol;button.type="button";
+    button.addEventListener("click",()=>{
+      if(set.has(i))set.delete(i);else set.add(i);
+      select(3);
+    });
+    document.getElementById(id).append(button);
+    tileButtons.push([button,set,i]);
+  }
+}
+function project(x,y,z){
+  const a=Number(angle.value)*Math.PI/180;
+  const u=Math.cos(a),v=Math.sin(a);
+  return [350+105*(u*(x-2)-v*(y-2)),220+52*(v*(x-2)+u*(y-2))-50*z];
+}
+function polygon(points,fill){
+  ctx.beginPath();ctx.moveTo(...points[0]);
+  for(const p of points.slice(1))ctx.lineTo(...p);
+  ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+}
+function shape(row,col,height,colour,side){
+  const points=[[col+.055,row+.055],[col+.945,row+.055],[col+.945,row+.945],[col+.055,row+.945]];
+  const top=points.map(([x,y])=>project(x,y,height)), bottom=points.map(([x,y])=>project(x,y,0));
+  if(height>0){
+    polygon([top[1],top[2],bottom[2],bottom[1]],side);
+    polygon([top[2],top[3],bottom[3],bottom[2]],side);
+  }
+  polygon(top,colour);
+}
+function countInTiles(row,col){
+  if(mode===0)return row===col?1:0;
+  if(mode===1)return Number(row<=1&&col===1)+Number(row===0&&col<=1);
+  return Number(rows.has(row)&&columns.has(col));
+}
+function render(){
+  ctx.clearRect(0,0,c.width,c.height);
+  const theta=Number(angle.value)*Math.PI/180;
+  const cells=symbols.flatMap((_,r)=>symbols.map((__,k)=>[r,k]));
+  cells.sort(([a,b],[d,e])=>(a-d)*Math.cos(theta)+(b-e)*Math.sin(theta));
+  for(const [row,col] of cells){
+    const height=.62*countInTiles(row,col);
+    const colour=row===col?"#65dcb5":height?"#ffc473":"#394c6d";
+    shape(row,col,height,colour,row===col?"#287c71":"#99602d");
+  }
+  ctx.font="bold 29px system-ui";ctx.fillStyle="#c8d5e9";ctx.textAlign="center";ctx.textBaseline="middle";
+  for(const [i,symbol] of symbols.entries()){
+    ctx.fillText(symbol,...project(i+.5,4.33,0));
+    ctx.fillText(symbol,...project(4.38,i+.5,0));
+  }
+  ctx.fillText("B",...project(2,4.91,0));
+  ctx.fillText("A",...project(4.84,2,0));
+}
+function select(value){
+  mode=value;
+  if(mode===2){rows.clear();columns.clear();for(const i of [0,1]){rows.add(i);columns.add(i);}}
+  for(const [button,set,i] of tileButtons)button.setAttribute("aria-pressed",String(set.has(i)));
+  presets.forEach((button,i)=>button.setAttribute("aria-pressed",String(i===mode)));
+  const heading=document.getElementById("heading"), summary=document.getElementById("summary");
+  let trueCount=0, falseCount=0, appearances=0;
+  for(let row=0;row<4;row++)for(let col=0;col<4;col++){
+    const count=countInTiles(row,col);
+    if(count>0){
+      if(row===col)trueCount++;
+      else{falseCount++;appearances+=count;}
+    }
+  }
+  if(mode===0){heading.textContent="Matching syndromes";summary.textContent="Four matching pairs on the diagonal.";}
+  else if(mode===1){heading.textContent="Two overlapping rectangles";summary.textContent="Both rectangles accept (00, 01), so the false pair appears twice but counts once.";}
+  else {
+    heading.textContent=mode===2?"A 2 × 2 square":"Your rectangle";
+    summary.textContent="The mixed-rectangle bound gives t² = "+trueCount**2+" ≤ |R| = "+(trueCount+falseCount)+", since a diagonal block has size one.";
+  }
+  document.getElementById("counter").textContent=trueCount+" true · "+falseCount+" distinct false"+(mode===1?" · "+appearances+" false appearances":"");
+  render();
+}
+presets.forEach((button,i)=>button.addEventListener("click",()=>select(i)));
+angle.addEventListener("input",render);
+c.addEventListener("pointerdown",event=>{drag=[event.clientX,Number(angle.value)];c.setPointerCapture(event.pointerId);});
+c.addEventListener("pointermove",event=>{
+  if(!drag)return;
+  angle.value=String(Math.max(14,Math.min(55,drag[1]+.45*(event.clientX-drag[0]))));render();
+});
+for(const name of ["pointerup","pointercancel","lostpointercapture"])c.addEventListener(name,()=>{drag=null;});
+select(0);
+</script>
+</html>

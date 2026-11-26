@@ -1,0 +1,5 @@
+K4: 1,380,708 rectangles across all 62 nontrivial oriented cuts.
+Affine fibers: 13,034 nonempty matrix/cut/charge cases.
+Exact syndrome circuits: 683 matrix/charge/vtree cases.
+Structured bound: 61,440 nonempty-retained cases and 4,096 vacuous cases.
+The four-syndrome overlap illustration and one-bit boundary cases passed.

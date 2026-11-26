@@ -1,0 +1,5 @@
+# Provenance
+
+Catalog Q515 transcribes Open Question 1 in Alexis de Colnet's 2022 Université d'Artois thesis. Definition 34 spells out the probability-based strong error, which becomes normalized symmetric difference for uniform counting. [Thesis question](https://alexisdec.github.io/assets/pdf/thesis_deColnet.pdf#page=74) · [Pinned catalog entry](https://github.com/10m-u/open-problems-catalog/blob/ca8d4d44ba3db527f19f28928c240168f545ecfe/problems/computer_science_ai/theory-of-computation-algorithms-part-1.md#q515)
+
+The catalog handoff supplied the Tseitin proof, an exact rectangle check and a companion affine-code width argument. The manuscript includes their full proofs and a worked example. The key earlier inputs are the hard-cut graph family and adversarial cover method in de Colnet's thesis, the fixed-vtree-cut structured DNNF theorem of Pipatsrisawat and Darwiche as stated by Bova et al., and Kashyap's code branchwidth and tree-realization framework. [Literature comparison](audits/public_safe_reports/LITERATURE_AUDIT.md) · [AI disclosure](AI_DISCLOSURE.md)
