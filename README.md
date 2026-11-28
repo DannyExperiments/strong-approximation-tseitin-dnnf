@@ -1,5 +1,6 @@
 # Strong approximation of Tseitin codes without determinism
 
+[![Lean · rectangle cover injection](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/lean.yml/badge.svg?branch=main)](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/lean.yml)
 [![Repository verification](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/verify.yml) [![Replay verification](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/replay.yml/badge.svg?branch=main)](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/replay.yml) [![PDF build](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/pdf.yml/badge.svg?branch=main)](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/actions/workflows/pdf.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24571970.svg)](https://doi.org/10.5281/zenodo.24571970)
 
@@ -22,3 +23,7 @@ The result answers the uniform strong-error case of Open Question 1 in de Colnet
 [Mathematical audit](audits/public_safe_reports/MATHEMATICAL_AUDIT.md) · [Literature audit](audits/public_safe_reports/LITERATURE_AUDIT.md) · [Scope](CLAIM_SCOPE_AND_LIMITATIONS.md) · [AI disclosure](AI_DISCLOSURE.md) · [Status](STATUS.md)
 
 [Release v1.0.0](https://github.com/DannyExperiments/strong-approximation-tseitin-dnnf/releases/tag/v1.0.0) · [Version DOI](https://doi.org/10.5281/zenodo.24571970) · [Citation](CITATION.cff)
+
+## Lean verification
+
+For selected accepted diagonal pairs whose off-diagonal cross pairs are forbidden, choosing any covering product rectangle inside the accepting set gives an injective assignment of selected indices to rectangles. The selection-size estimate, DNNF cover construction and exponential bounds are proved in the paper. [Lean source and replay](formalization/README.md)
